@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Medical Shop Inventory</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="brand-block">
+          <div class="brand-icon">+</div>
+          <div>
+            <div class="brand-name">Medical Shop</div>
+            <div class="brand-subtitle">Inventory DBMS</div>
+          </div>
+        </div>
+
+        <nav class="nav-menu">
+          <button class="nav-link active" data-section="dashboard">Dashboard</button>
+          <button class="nav-link" data-section="medicines">Medicines</button>
+          <button class="nav-link" data-section="suppliers">Suppliers</button>
+          <button class="nav-link" data-section="restocking">Restocking</button>
+          <button class="nav-link" data-section="reports">Reports</button>
+        </nav>
+      </aside>
+
+      <main class="main-panel">
+        <header class="topbar">
+          <div>
+            <div class="eyebrow">Overview</div>
+            <h1>Medical Inventory Dashboard</h1>
+          </div>
+          <div class="topbar-actions">
+            <span class="live-pill">Live inventory</span>
+          </div>
+        </header>
+
+        <section id="dashboard" class="page active">
+          <div id="summary-cards" class="summary-grid"></div>
+
+          <div class="two-column-layout">
+            <div class="panel stock-panel">
+              <div class="panel-header">
+                <h3>Animated Stock Inventory</h3>
+              </div>
+              <div id="stock-cards" class="stock-card-grid"></div>
+            </div>
+
+            <div class="panel alerts-panel">
+              <div class="panel-header">
+                <h3>Low Stock Alerts</h3>
+              </div>
+              <div id="low-stock-alerts" class="alert-list"></div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-header">
+              <h3>Recent Restocking Transactions</h3>
+            </div>
+            <div id="recent-restocks" class="table-wrap"></div>
+          </div>
+        </section>
+
+        <section id="medicines" class="page">
+          <div class="toolbar">
+            <div class="filter-row">
+              <input id="medicine-search" type="search" placeholder="Search by name, category, supplier, rack..." />
+              <select id="medicine-category-filter">
+                <option value="all">All categories</option>
+              </select>
+              <select id="medicine-status-filter">
+                <option value="all">All statuses</option>
+                <option value="LOW">LOW</option>
+                <option value="MEDIUM">MEDIUM</option>
+                <option value="FULL">FULL</option>
+              </select>
+              <label class="check-inline">
+                <input id="low-stock-only" type="checkbox" />
+                <span>Low Stock Only</span>
+              </label>
+            </div>
+            <button id="open-medicine-modal" class="primary-btn">+ Add Medicine</button>
+          </div>
+
+          <div class="panel table-panel">
+            <div class="panel-header">
+              <h3>Medicines</h3>
+            </div>
+            <div id="medicine-table" class="table-wrap"></div>
+          </div>
+        </section>
+
+        <section id="suppliers" class="page">
+          <div class="toolbar">
+            <input id="supplier-search" type="search" placeholder="Search suppliers" />
+            <button id="open-supplier-modal" class="primary-btn">+ Add Supplier</button>
+          </div>
+
+          <div class="panel table-panel">
+            <div class="panel-header">
+              <h3>Suppliers</h3>
+            </div>
+            <div id="supplier-table" class="table-wrap"></div>
+          </div>
+        </section>
+
+        <section id="restocking" class="page">
+          <div class="panel form-panel">
+            <div class="panel-header">
+              <h3>Restock Entry</h3>
+            </div>
+            <form id="restock-form" class="stack-form">
+              <div class="form-grid">
+                <label>
+                  <span>Medicine</span>
+                  <select id="restock-medicine" required></select>
+                </label>
+                <label>
+                  <span>Supplier</span>
+                  <select id="restock-supplier" required></select>
+                </label>
+                <label>
+                  <span>Quantity</span>
+                  <input id="restock-quantity" type="number" min="1" step="1" required />
+                </label>
+                <label>
+                  <span>Unit Cost</span>
+                  <input id="restock-unit-cost" type="number" min="0" step="0.01" required />
+                </label>
+                <label>
+                  <span>Total Cost</span>
+                  <input id="restock-total-cost" type="text" readonly />
+                </label>
+                <label>
+                  <span>Restock Date</span>
+                  <input id="restock-date" type="date" required />
+                </label>
+              </div>
+              <label>
+                <span>Remarks</span>
+                <textarea id="restock-remarks" rows="3" placeholder="Optional notes"></textarea>
+              </label>
+              <button type="submit" class="primary-btn">Save Restock</button>
+            </form>
+          </div>
+        </section>
+
+        <section id="reports" class="page">
+          <div class="report-grid">
+            <div class="panel">
+              <div class="panel-header">
+                <h3>Low Stock Medicines</h3>
+              </div>
+              <div id="report-low-stock" class="table-wrap"></div>
+            </div>
+
+            <div class="panel">
+              <div class="panel-header">
+                <h3>Supplier Information</h3>
+              </div>
+              <div id="report-suppliers" class="table-wrap"></div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-header">
+              <h3>Restock History</h3>
+            </div>
+            <div id="report-restocks" class="table-wrap"></div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <div id="medicine-modal" class="modal hidden">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 id="medicine-modal-title">Add Medicine</h3>
+          <button class="close-modal" data-target="medicine-modal">×</button>
+        </div>
+        <form id="medicine-form" class="stack-form">
+          <div class="form-grid">
+            <label>
+              <span>Name</span>
+              <input name="name" required />
+            </label>
+            <label>
+              <span>Category</span>
+              <input name="category" required />
+            </label>
+            <label>
+              <span>Current Stock</span>
+              <input name="current_stock" type="number" min="0" required />
+            </label>
+            <label>
+              <span>Minimum Stock</span>
+              <input name="minimum_stock" type="number" min="0" required />
+            </label>
+            <label>
+              <span>Maximum Stock</span>
+              <input name="maximum_stock" type="number" min="1" required />
+            </label>
+            <label>
+              <span>Unit Price</span>
+              <input name="unit_price" type="number" min="0" step="0.01" required />
+            </label>
+            <label>
+              <span>Supplier</span>
+              <select name="supplier_id" required></select>
+            </label>
+            <label>
+              <span>Rack Location</span>
+              <input name="rack_location" required />
+            </label>
+            <label>
+              <span>Expiry Date</span>
+              <input name="expiry_date" type="date" required />
+            </label>
+          </div>
+          <label>
+            <span>Description</span>
+            <textarea name="description" rows="3"></textarea>
+          </label>
+          <button type="submit" class="primary-btn">Save Medicine</button>
+        </form>
+      </div>
+    </div>
+
+    <div id="supplier-modal" class="modal hidden">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 id="supplier-modal-title">Add Supplier</h3>
+          <button class="close-modal" data-target="supplier-modal">×</button>
+        </div>
+        <form id="supplier-form" class="stack-form">
+          <div class="form-grid">
+            <label>
+              <span>Name</span>
+              <input name="name" required />
+            </label>
+            <label>
+              <span>Contact Person</span>
+              <input name="contact_person" required />
+            </label>
+            <label>
+              <span>Phone</span>
+              <input name="phone" required />
+            </label>
+            <label>
+              <span>Email</span>
+              <input name="email" type="email" required />
+            </label>
+          </div>
+          <label>
+            <span>Address</span>
+            <textarea name="address" rows="4" required></textarea>
+          </label>
+          <button type="submit" class="primary-btn">Save Supplier</button>
+        </form>
+      </div>
+    </div>
+
+    <div id="summary-detail-modal" class="modal summary-detail-modal hidden" role="dialog" aria-modal="true" aria-labelledby="summary-detail-title">
+      <div class="modal-content summary-detail-content">
+        <div class="modal-header">
+          <div>
+            <div id="summary-detail-count" class="summary-detail-count"></div>
+            <h3 id="summary-detail-title">Details</h3>
+          </div>
+          <button id="close-summary-detail" class="close-modal" data-target="summary-detail-modal" type="button" aria-label="Close details">×</button>
+        </div>
+        <div id="summary-detail-body" class="summary-detail-body" aria-live="polite"></div>
+      </div>
+    </div>
+
+    <div id="toast" class="toast hidden"></div>
+
+    <script src="script.js"></script>
+  </body>
+</html>

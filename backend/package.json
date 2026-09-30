@@ -1,0 +1,26 @@
+{
+  "name": "medical-shop-backend",
+  "version": "1.0.0",
+  "description": "Medical shop database management system backend",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --check server.js && node --check db.js"
+  },
+  "keywords": [
+    "medical",
+    "inventory",
+    "mysql",
+    "express"
+  ],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.6",
+    "dotenv": "^18.0.4",
+    "express": "^4.19.2",
+    "mysql2": "^3.24.5"
+  }
+}
